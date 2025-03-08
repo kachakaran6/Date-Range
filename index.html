@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      href="https://img.icons8.com/?size=100&id=c9asPidgT5mq&format=png&color=000000"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Date Range Calculator</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-sans flex items-center justify-center min-h-screen"
+  >
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-96">
+      <h1 class="text-2xl font-bold text-center mb-4">Date Range Calculator</h1>
+
+      <div class="mb-4">
+        <label for="from" class="block font-medium">From</label>
+        <input
+          id="from"
+          name="from"
+          type="date"
+          class="w-full p-2 mt-1 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="to" class="block font-medium">To</label>
+        <input
+          id="to"
+          name="to"
+          type="date"
+          class="w-full p-2 mt-1 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300"
+        />
+      </div>
+
+      <div class="flex justify-center mb-4">
+        <button
+          onclick="totaldays()"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Calculate Total Days
+        </button>
+      </div>
+
+      <div class="text-gray-700 dark:text-gray-300 mt-4">
+        <label id="totalDaysLabel" class="block font-medium"
+          >Total Days: 0</label
+        >
+        <label id="totalSundaysLabel" class="block font-medium"
+          >Total Sundays: 0</label
+        >
+      </div>
+    </div>
+
+    <script>
+      const from = document.querySelector('input[name="from"]');
+      const to = document.querySelector('input[name="to"]');
+      const totalDaysLabel = document.getElementById("totalDaysLabel");
+      const totalSundaysLabel = document.getElementById("totalSundaysLabel");
+
+      function totaldays() {
+        const fromdate = new Date(from.value);
+        const todate = new Date(to.value);
+
+        if (fromdate && todate && !isNaN(fromdate) && !isNaN(todate)) {
+          // Calculate total days
+          const totalDays = Math.round(
+            (todate - fromdate) / (1000 * 3600 * 24)
+          );
+
+          let sundayCount = 0;
+          let currentDate = new Date(fromdate);
+
+          while (currentDate <= todate) {
+            if (currentDate.getDay() === 0) {
+              sundayCount++;
+            }
+            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+          }
+
+          totalDaysLabel.textContent = `Total Days: ${totalDays}`;
+          totalSundaysLabel.textContent = `Total Sundays: ${sundayCount}`;
+        } else {
+          totalDaysLabel.textContent = "Please select valid dates.";
+          totalSundaysLabel.textContent = "";
+        }
+      }
+    </script>
+  </body>
+</html>
