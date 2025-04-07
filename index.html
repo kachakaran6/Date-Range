@@ -50,8 +50,12 @@
         <label id="totalDaysLabel" class="block font-medium"
           >Total Days: 0</label
         >
+
         <label id="totalSundaysLabel" class="block font-medium"
           >Total Sundays: 0</label
+        >
+        <label id="liveDurationLabel" class="block font-medium"
+          >Live Duration: 0d 0h 0m 0s</label
         >
       </div>
     </div>
@@ -61,13 +65,15 @@
       const to = document.querySelector('input[name="to"]');
       const totalDaysLabel = document.getElementById("totalDaysLabel");
       const totalSundaysLabel = document.getElementById("totalSundaysLabel");
+      const liveDurationLabel = document.getElementById("liveDurationLabel");
+
+      let liveInterval;
 
       function totaldays() {
         const fromdate = new Date(from.value);
         const todate = new Date(to.value);
 
         if (fromdate && todate && !isNaN(fromdate) && !isNaN(todate)) {
-          // Calculate total days
           const totalDays = Math.round(
             (todate - fromdate) / (1000 * 3600 * 24)
           );
@@ -79,15 +85,39 @@
             if (currentDate.getDay() === 0) {
               sundayCount++;
             }
-            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+            currentDate.setDate(currentDate.getDate() + 1);
           }
 
           totalDaysLabel.textContent = `Total Days: ${totalDays}`;
           totalSundaysLabel.textContent = `Total Sundays: ${sundayCount}`;
+
+          // Start live duration update
+          clearInterval(liveInterval);
+          liveInterval = setInterval(() => updateLiveDuration(fromdate), 1000);
+          updateLiveDuration(fromdate); // initial call
         } else {
           totalDaysLabel.textContent = "Please select valid dates.";
           totalSundaysLabel.textContent = "";
+          liveDurationLabel.textContent = "";
         }
+      }
+
+      function updateLiveDuration(fromdate) {
+        const now = new Date();
+        let diff = Math.abs(now - fromdate);
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        diff -= days * (1000 * 60 * 60 * 24);
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        diff -= hours * (1000 * 60 * 60);
+
+        const minutes = Math.floor(diff / (1000 * 60));
+        diff -= minutes * (1000 * 60);
+
+        const seconds = Math.floor(diff / 1000);
+
+        liveDurationLabel.textContent = `Live Duration: ${days}d ${hours}h ${minutes}m ${seconds}s`;
       }
     </script>
   </body>
